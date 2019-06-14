@@ -1,0 +1,28 @@
+<%- include('partials/header') -%>
+
+<div class="container">
+
+  <div class="jumbotron jumbotron-fluid text-white-50" id="backgroundpicture" >
+    <div class="container p-5">
+      <h3 class="display-4">Best Movies of All Times </h3>
+      <p class="lead">Read to reviews of most popular movies... </p>
+      <a class="btn btn-dark btn-sm " href="/movies/newMovie" role="button"> Add your favourite </a>
+    </div>
+  </div>
+
+  <div class="row ">
+    <%  renderedMovies.forEach(function(movie){ %>
+    <div class="col-md-6 col-lg-4 ">
+      <div class="card m-1">
+        <img class="card-img-top" height="200px" src="<%= movie.image %>">
+        <div class="card-body">
+          <h5 class="card-title"> <%= movie.title %> </h5>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</div>
+
+
+<%- include('partials/footer'); -%>

@@ -1,0 +1,23 @@
+{
+  "name": "movieblog",
+  "version": "1.0.0",
+  "description": "SampleNodeApp - MovieBlog",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/burakunuvar/sampleNodeApp.git"
+  },
+  "author": "buraku",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/burakunuvar/sampleNodeApp/issues"
+  },
+  "homepage": "https://github.com/burakunuvar/sampleNodeApp#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.17.1"
+  }
+}
