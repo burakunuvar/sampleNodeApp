@@ -24,7 +24,7 @@
 
   ```
 
-  STEP2 :
+   * #### STEP2 :
   // Migrate the default array of listOfMovies to the database by ` collection.insertMany` model at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.insertMany). Do this only once, as this will save the array to database permanently.
 
   // Use db.collections.drop() and insert new items ; and then remove the default array of listOfMovies
@@ -35,10 +35,9 @@
 
   // Update app.post("/movies") with `collection.create(document,function(err,insertedDoc){)` at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.create)
 
+   * #### STEP 3: RESTFUL ROUTES
 
-  STEP 3:
 
-  // RESTFUL ROUTES
 
   | name   | url             | verb | desc                            |
   |--------|-----------------|------|---------------------------------|
@@ -52,4 +51,4 @@
 
   // use `req.params.id` for `_id` of the object; which is passed data through index.ejs to app.js.
 
-  //Create show.ejs file for the rendered movie
+  // Create show.ejs file for the rendered movie
