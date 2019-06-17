@@ -1,0 +1,13 @@
+<%- include('partials/header') -%>
+
+    <h1>show timeee</h1>
+
+    <h4 class="card-title"> <%= shownMovie.title %> </h4>
+
+    <img height="300px" src="<%= shownMovie.image %>">
+
+    <p> <%=shownMovie.description %>  </p>
+
+    <a class="btn btn-dark btn-sm " href="/movies" role="button"> back to movies </a>
+
+<%- include('partials/footer'); -%>

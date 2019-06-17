@@ -2,20 +2,19 @@
 const express = require("express");
 const ejs = require('ejs');
 const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
 
-const listOfMovies = [{
-    title: "The Dark Knight Triology",
-    image: "https://static.comicvine.com/uploads/original/11123/111232510/4776142-the-dark-knight-trilogy-source.jpg"
-  },
-  {
-    title: "Avengers:Endame",
-    image: "https://specials-images.forbesimg.com/imageserve/5cc0c243a7ea436c70f3ba2f/960x0.jpg"
-  },
-  {
-    title: "Gotham",
-    image: "https://www.log.com.tr/wp-content/uploads/2018/12/Gotham-Season-5-Poster-FOX.jpg",
-  },
-];
+mongoose.connect('mongodb://localhost:27017/moviesDB', {useNewUrlParser: true});
+
+const movieSchema = new mongoose.Schema({
+   title: String,
+   image: String,
+   description: String,
+});
+
+const Movie = mongoose.model('Movie', movieSchema);
+
+
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
@@ -29,24 +28,57 @@ app.get("/", (req, res) => {
   res.render("landing");
 });
 
+//RESTAPI: 1-GET; request made to index.ejs
 app.get("/movies", (req, res) => {
-  res.render("movies", {
-    renderedMovies: listOfMovies
+  console.log("**** RESTAPI: 1-GET; request made to index.ejs ");
+  Movie.find({},function(err,foundMovies){
+    if(!err){
+      res.render("index", {
+        renderedMovies: foundMovies
+      });
+    }else{
+      console.log(err);
+    }
   });
 });
 
+//RESTAPI: 2-GET form ; request made to newMovie.ejs
+app.get("/movies/newMovie", (req, res) => {
+  console.log("**** RESTAPI: 2-GET form ; request made to newMovie.ejs ");
+  res.render("newMovie");
+});
+
+//RESTAPI: 3-POST ; request made to index.ejs
 app.post("/movies", (req, res) => {
+console.log("**** RESTAPI: 3-POST ; request made to index.ejs ");
   var newMovie={
     title: req.body.title,
     image: req.body.image,
+    description: req.body.description
   };
-  listOfMovies.push(newMovie);
+  Movie.create(newMovie,function(err,insertedMovie){
+    if(!err){
+      console.log(insertedMovie+" inserted successfully");
+    }else{
+      console.log(err);
+    }
+  });
   res.redirect("/movies");
 });
 
-app.get("/movies/newMovie", (req, res) => {
-  res.render("newMovie");
+//RESTAPI: 4-SHOW ; request made to show.ejs
+app.get("/movies/:id",function(req,res){
+  console.log("**** RESTAPI: 4-SHOW ; request made to show.ejs ");
+  Movie.findById(req.params.id,function(err,shownMovie){
+    if(!err){
+      res.render("show",{shownMovie:shownMovie});
+      console.log(shownMovie);
+    }else{
+      console.log(err);
+    }
+  });
 });
+
 
 app.listen(3000, function() {
   console.log("MovieCamp started on port 3000");

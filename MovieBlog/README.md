@@ -1,64 +1,55 @@
-## sampleNodeApp - MovieBlog
 
-* ### Part1 : Ignite the Project
+* ### Part2 : DATA PERSISTANCE
 
- * #### STEP 1 :
+ * #### STEP1 :
 
- // git init and refer to [Node.gitignore](https://github.com/github/gitignore/blob/master/Node.gitignore#L3)
+  // create new branch
 
- // initialize and build package.json
+  ```
+  $ npm install mongoose
+  ```
 
- // Install express and ejs packages
+  // Update app.js with required code based on [Mongoose](https://mongoosejs.com/)
 
- ```node
-  $ npm init
-  $ npm i express ejs
- ```
+  // Build movieSchema : new mongoose.Schema is needed for complex scripts, whereas a JS Object is only for basic commands.
 
- * #### STEP 2:
+  ```
+  $ const movieSchema = new mongoose.Schema({
+  $   title: String,
+  $   image: String,
+  $   description: String,
+  $ });
 
- // Build app.js based on boilerplate
+  & const Movie = mongoose.model('Movie', movieSchema);
 
- // Build views folder for landing.ejs and movies.ejs
+  ```
 
- // use a default array of listOfMovies to be rendered by movies.ejs, until a permanent database is built.
+  STEP2 :
+  // Migrate the default array of listOfMovies to the database by ` collection.insertMany` model at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.insertMany). Do this only once, as this will save the array to database permanently.
 
- // Build partials folder for header.ejs(with bootstrap) and footer.ejs
+  // Use db.collections.drop() and insert new items ; and then remove the default array of listOfMovies
 
- // Include necessary code at the beginning and end of any rendered page :
+  // Update schema and add the 3rd key of the documents as "description" ; update newMovie.ejs and index.ejs files for the new key
 
- ```ejs
-  <%- include('partials/header') -%>
-  <%- include('partials/footer'); -%>
- ```
+  // Update app.get("/movies") with `collection.find({},function(err,found){})` at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.find)
 
- * #### STEP3 :
+  // Update app.post("/movies") with `collection.create(document,function(err,insertedDoc){)` at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.create)
 
- // adapt a post route and install bodyParser
 
- ```node
- $ npm i body-parser
-```
-So that req.body.title, req.body.image will be passed through the form
+  STEP 3:
 
- // Don't miss the line `
-  app.use(bodyParser.urlencoded({ extended: true }));`
+  // RESTFUL ROUTES
 
- // Build a new ejs file for new items to be added : newMovie.ejs
+  | name   | url             | verb | desc                            |
+  |--------|-----------------|------|---------------------------------|
+  | INDEX  | /movies         | GET  | find all and display the list   |
+  | NEW    | /movies/newMovie| GET  | display the form                |
+  | CREATE | /movies         | POST | inserted a new one              |
+  | SHOW   | /movies/:id     | GET  | show details of a specific item |
 
- // Use a form with method="POST" and action="/movies" ;should be same as post route
 
- ```
-  $ <form action="/movies" method="POST">
-    <!-- should be same as post route -->
-  $   <input type="text" name="title" placeholder="name of the movie">
-  $   <input type="text" name="image" placeholder="image URL">
-  $   <button type="submit" name="button"> submit </button>
-  $ </form>
+  // Build the show route app.get("/movies/:id") with  `collection.findById` at the link](https://mongoosejs.com/docs/api/model.html#model_Model.findById)
 
- ```
+  // use `req.params.id` for `_id` of the object; which is passed data through index.ejs to app.js.
 
- * #### STEP4 :
-
- // Add Bootstrap link to header.ejs file
- // [fit-100-of-an-image-to-a-jumbotron](https://stackoverflow.com/questions/31147543/how-to-fit-100-of-an-image-to-a-jumbotron)
+  //Create show.ejs file for the rendered movie
