@@ -3,17 +3,12 @@ const express = require("express");
 const ejs = require('ejs');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const Movie = require("./models/movie");
+const Comment = require("./models/movie");
+const seedDB = require("./seeds");
 
+seedDB();
 mongoose.connect('mongodb://localhost:27017/moviesDB', {useNewUrlParser: true});
-
-const movieSchema = new mongoose.Schema({
-   title: String,
-   image: String,
-   description: String,
-});
-
-const Movie = mongoose.model('Movie', movieSchema);
-
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -69,7 +64,7 @@ console.log("**** RESTAPI: 3-POST ; request made to index.ejs ");
 //RESTAPI: 4-SHOW ; request made to show.ejs
 app.get("/movies/:id",function(req,res){
   console.log("**** RESTAPI: 4-SHOW ; request made to show.ejs ");
-  Movie.findById(req.params.id,function(err,shownMovie){
+  Movie.findById(req.params.id).populate("comments").exec(function(err,shownMovie){
     if(!err){
       res.render("show",{shownMovie:shownMovie});
       console.log(shownMovie);

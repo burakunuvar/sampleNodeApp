@@ -1,55 +1,82 @@
 
-* ### Part2 : DATA PERSISTANCE
-
- * #### STEP1 :
-
-  // create new branch
-
-  ```
-  $ npm install mongoose
-  ```
-
-  // Update app.js with required code based on [Mongoose](https://mongoosejs.com/)
-
-  // Build movieSchema : new mongoose.Schema is needed for complex scripts, whereas a JS Object is only for basic commands.
-
-  ```
-  $ const movieSchema = new mongoose.Schema({
-  $   title: String,
-  $   image: String,
-  $   description: String,
-  $ });
-
-  & const Movie = mongoose.model('Movie', movieSchema);
-
-  ```
-
-  STEP2 :
-  // Migrate the default array of listOfMovies to the database by ` collection.insertMany` model at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.insertMany). Do this only once, as this will save the array to database permanently.
-
-  // Use db.collections.drop() and insert new items ; and then remove the default array of listOfMovies
-
-  // Update schema and add the 3rd key of the documents as "description" ; update newMovie.ejs and index.ejs files for the new key
-
-  // Update app.get("/movies") with `collection.find({},function(err,found){})` at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.find)
-
-  // Update app.post("/movies") with `collection.create(document,function(err,insertedDoc){)` at the [link](https://mongoosejs.com/docs/api/model.html#model_Model.create)
+* ### Part3 : MODELS
 
 
-  STEP 3:
+ * #### Step1
 
-  // RESTFUL ROUTES
+// build models folder;
+// Update movieSchema with comments , create a separate file as movie.js; including module.exports = Movie
+// Create commentSchema, create a seperate file as comment.js ; including module.exports = Comment
+// Update app.js by removing Movie movieSchema and requiring new models created above
 
-  | name   | url             | verb | desc                            |
-  |--------|-----------------|------|---------------------------------|
-  | INDEX  | /movies         | GET  | find all and display the list   |
-  | NEW    | /movies/newMovie| GET  | display the form                |
-  | CREATE | /movies         | POST | inserted a new one              |
-  | SHOW   | /movies/:id     | GET  | show details of a specific item |
+// views, models and public folder(for styling), will all be in the same directory with app.js
+  Those are all alternatives to locate :
+
+```  
+$ app.use(express.static("public"));
+$ app.use(express.static("./public"));
+$ app.use(express.static(__dirname + "/public"))
+```
+
+ * #### Step2
 
 
-  // Build the show route app.get("/movies/:id") with  `collection.findById` at the link](https://mongoosejs.com/docs/api/model.html#model_Model.findById)
+// IMPORTANT HINT FOR LOCATIONS :
 
-  // use `req.params.id` for `_id` of the object; which is passed data through index.ejs to app.js.
+```
 
-  //Create show.ejs file for the rendered movie
+- ` / ` means go back to the root folder, then traverse forward/downward.
+- `./ ` means begin in the folder we are currently in (current working directory) and traverse forward/downward in the tree. ( same with using nth or `_dirname` )
+
+- `../` means go up one directory, then begin the traverse.
+
+```
+
+// Build seeds.js ending with `module.exports = seedDB;`
+
+// Code will not run in a queue ( asynch ) ; so use callbacks
+
+// Don't make functions within a loop, [click for details](https://www.youtube.com/watch?v=Nqfs14iu_us)
+
+// display comments by using populate.exec. So update `app.get("/movies/:id",function(req,res){` by replacing
+
+```
+Movie.findById(req.params.id,function(err,shownMovie){
+  if(!err){
+    res.render("show",{shownMovie:shownMovie});
+    console.log(shownMovie);
+  }else{
+    console.log(err);
+  }
+});
+
+```
+ with
+
+```
+Movie.findById(req.params.id).populate("comments").exec(function(err,shownMovie){
+  if(!err){
+    res.render("show",{shownMovie:shownMovie});
+    console.log(shownMovie);
+  }else{
+    console.log(err);
+  }
+});
+
+```
+
+ * #### Step3
+
+ // Update show.ejs by including comments, which is an array of objects inside movies collection.
+
+ ```
+$ <% shownMovie.comments.forEach(function(comment){ %>
+$   <h5> <%= comment %></h5>
+$   <p>
+$       <strong><%= comment["author"] %></strong> - <%=comment.text %>
+$       <br>
+$     <strong><%= comment.author %></strong> - <%= comment["text"] %>
+$   </p>
+$ <% }) %>
+
+ ```

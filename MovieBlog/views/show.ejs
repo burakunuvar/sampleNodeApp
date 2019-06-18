@@ -1,3 +1,4 @@
+
 <%- include('partials/header') -%>
 
     <h1>show timeee</h1>
@@ -7,6 +8,15 @@
     <img height="300px" src="<%= shownMovie.image %>">
 
     <p> <%=shownMovie.description %>  </p>
+
+    <% shownMovie.comments.forEach(function(comment){ %>
+      <h5> <%= comment %></h5>
+      <p>
+          <strong><%= comment["author"] %></strong> - <%= comment.text %>
+          <br>
+          <strong><%= comment.author %></strong> - <%= comment["text"] %>
+      </p>
+    <% }) %>
 
     <a class="btn btn-dark btn-sm " href="/movies" role="button"> back to movies </a>
 
