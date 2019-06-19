@@ -1,82 +1,50 @@
 
-* ### Part3 : MODELS
+* ### Part4 : NESTED ROUTES
 
 
- * #### Step1
+ * #### Step1 Build Nested Routes
 
-// build models folder;
-// Update movieSchema with comments , create a separate file as movie.js; including module.exports = Movie
-// Create commentSchema, create a seperate file as comment.js ; including module.exports = Comment
-// Update app.js by removing Movie movieSchema and requiring new models created above
+|   | name              | path                     | HTTP Verb | Mongoose Method          | Purpose                                           |
+|---|-------------------|--------------------------|-----------|--------------------------|---------------------------------------------------|
+| 1 | INDEX             | /movies                  | GET       | collection.find          | list all movies                                   |
+| 2 | NEW               | /movies/newForm          | GET       | N/A                      | display the form for new movie                    |
+| 3 | CREATE            | /movies                  | POST      | collection.create()      | insert a new movie                                |
+| 4 | SHOW              | /movies/:id              | GET       | collection.findById()    | show details of selected movie                    |
+|   | 4.a nested index  | /movies/:id/comments/    | GET       | collection.find()        | list all comments                                 |
+|   | 4.b nested new    | /movies/:id/comments/new | GET       | N/A                      | display the form for new comment                  |
+|   | 4.c nested create | /movies/:id/comments     | POST      | collection.create()      | insert a new comment                              |
+|   | 4.d nested show   | /movies/:id/comments/:id | GET       | collection.findById()    | show details of selected comment                  |
+| 5 | EDIT              | /movies/:id/edit         | GET       | post.findById()          | Show edit form for one post                       |
+| 6 | UPDATE            | /movies/:id              | PUT       | post.findByIdAndUpdate() | Update particular post, then redirect             |
+| 7 | DESTROY           | /movies/:id              | DELETE    | post.findByIdAndRemove() | Delete a particular post, then redirect somewhere |
 
-// views, models and public folder(for styling), will all be in the same directory with app.js
-  Those are all alternatives to locate :
+* #### Step2
 
-```  
-$ app.use(express.static("public"));
-$ app.use(express.static("./public"));
-$ app.use(express.static(__dirname + "/public"))
-```
+//Create seperate folders as movies and comments, for the related ejs files in views folder
+  Don't forget to update the route for the partials (footer and header), as the working directory will be updated (in app.js and index.ejs )
 
- * #### Step2
+// Add the logic for the routes 4b and 4c to the app.js file ; as mentioned on table above
 
+- 4.b For get route use populate for the associated schemas :
+  ```
+Movie.findById(req.params.id).populate("comments").exec(function(err,whichMovietoComment){
+  ```
 
-// IMPORTANT HINT FOR LOCATIONS :
+- 4.c For post route, go step by step
+ -  create a new comment
+ - look up campground using ID
+ - connect new comment to movie
+ - redirect to showpage
 
-```
+// build newComment.ejs ; for the id: part you'll need another rendering on app.js (similar to edit, on RESTFUL APIs)
 
-- ` / ` means go back to the root folder, then traverse forward/downward.
-- `./ ` means begin in the folder we are currently in (current working directory) and traverse forward/downward in the tree. ( same with using nth or `_dirname` )
+// [Express-Sanitizer](https://www.npmjs.com/package/express-sanitizer) is recommended to prevent cross site scripting
 
-- `../` means go up one directory, then begin the traverse.
-
-```
-
-// Build seeds.js ending with `module.exports = seedDB;`
-
-// Code will not run in a queue ( asynch ) ; so use callbacks
-
-// Don't make functions within a loop, [click for details](https://www.youtube.com/watch?v=Nqfs14iu_us)
-
-// display comments by using populate.exec. So update `app.get("/movies/:id",function(req,res){` by replacing
-
-```
-Movie.findById(req.params.id,function(err,shownMovie){
-  if(!err){
-    res.render("show",{shownMovie:shownMovie});
-    console.log(shownMovie);
-  }else{
-    console.log(err);
-  }
-});
-
-```
- with
-
-```
-Movie.findById(req.params.id).populate("comments").exec(function(err,shownMovie){
-  if(!err){
-    res.render("show",{shownMovie:shownMovie});
-    console.log(shownMovie);
-  }else{
-    console.log(err);
-  }
-});
-
-```
-
- * #### Step3
-
- // Update show.ejs by including comments, which is an array of objects inside movies collection.
+Sample :
 
  ```
-$ <% shownMovie.comments.forEach(function(comment){ %>
-$   <h5> <%= comment %></h5>
-$   <p>
-$       <strong><%= comment["author"] %></strong> - <%=comment.text %>
-$       <br>
-$     <strong><%= comment.author %></strong> - <%= comment["text"] %>
-$   </p>
-$ <% }) %>
-
- ```
+$ npm i express-sanitizer
+$ const expressSanitizer = require('express-sanitizer');
+$ app.use(expressSanitizer());
+$ req.body.comment.text = req.sanitize(req.body.comment.text);
+```
