@@ -1,0 +1,11 @@
+body {
+    background-color: #d3d3d3;
+}
+
+#backgroundpicture {
+    background: url("https://ak3.picdn.net/shutterstock/videos/20242933/thumb/12.jpg");
+    /* background-size: cover; */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+}

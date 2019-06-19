@@ -1,26 +1,49 @@
 <%- include('../partials/header') -%>
 
-    <h1>show timeee</h1>
+<div class="container mt-3 ">
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead"> Movies ... </p>
+            <ul class="list-group">
+              <li class="list-group-item active">Info 1</li>
+              <li class="list-group-item">Info 2</li>
+              <li class="list-group-item">Info 3</li>
+             </ul>
+        </div>
+        <div class="col-md-9">
+             <div class="card" >
+                 <img class="card-img-top " src="<%= shownMovie.image %>" alt="Card image cap">
+                 <div class="card-body">
+                     <h4 class="card-title float-right"> $9.00/night </h4>
+                     <h4 class="card-title"><a href="#"><%= shownMovie.title %></a></h4>
+                     <p class="card-text"> <%=shownMovie.description  %></p>
+                     <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                </div>
+            </div>
+            <div class="card mt-3 bg-light" >
+                 <div class="card-body">
+                     <h4 class="card-title text-right mb-5">
+                       <a class="btn btn-success btn-sm" href="/movies/<%=shownMovie._id %>/comments/new" role="button">
+                          leave a comment
+                        </a>
+                        <a class="btn btn-dark btn-sm m-1" href="/movies" role="button"> back to movies </a>
+                     </h4>
+                     <hr>
+                     <% shownMovie.comments.forEach(function(comment){ %>
+                        <div class="row">
+                            <div class="col-md-12 m-2">
+                                <p class="card-text float-right m-1 "> <em> 10 days ago</em> </p>
+                                <p class="card-text m-1"> <strong> <%= comment.author %> </strong> </p>
+                                <p class="card-text m-1">
+                                    <%= comment["text"] %>
+                                </p>
+                            </div>
+                        </div>
+                     <% }); %>
+                </div>
+            </div>
+    </div>
+</div>
 
-    <h4 class="card-title"> <%= shownMovie.title %> </h4>
-
-    <img height="300px" src="<%= shownMovie.image %>">
-
-    <p> <%-shownMovie.description %>  </p>
-
-    <p>
-      <a class="btn btn-dark btn-sm m-1 " href="/movies/<%=shownMovie._id%>/comments/new" role="button"> new comment </a>
-    </p>
-
-    <% shownMovie.comments.forEach(function(comment){ %>
-      <h5> <%= comment %></h5>
-      <p>
-          <strong><%= comment["author"] %></strong> - <%- comment.text %>
-          <br>
-          <strong><%= comment.author %></strong> - <%- comment["text"] %>
-      </p>
-    <% }) %>
-
-    <a class="btn btn-dark btn-sm m-1" href="/movies" role="button"> back to movies </a>
 
 <%- include('../partials/footer'); -%>

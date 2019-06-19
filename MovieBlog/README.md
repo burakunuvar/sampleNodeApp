@@ -1,50 +1,20 @@
+* ### Part5 : Public Folder for Styling with CSS and JS
 
-* ### Part4 : NESTED ROUTES
+// Style showOneMovie.ejs by using Bootstrap4
 
+// Build public folder, in the same directory with app.js, to include specific CSS and JS files
 
- * #### Step1 Build Nested Routes
+  Those are all alternatives to use  :
 
-|   | name              | path                     | HTTP Verb | Mongoose Method          | Purpose                                           |
-|---|-------------------|--------------------------|-----------|--------------------------|---------------------------------------------------|
-| 1 | INDEX             | /movies                  | GET       | collection.find          | list all movies                                   |
-| 2 | NEW               | /movies/newForm          | GET       | N/A                      | display the form for new movie                    |
-| 3 | CREATE            | /movies                  | POST      | collection.create()      | insert a new movie                                |
-| 4 | SHOW              | /movies/:id              | GET       | collection.findById()    | show details of selected movie                    |
-|   | 4.a nested index  | /movies/:id/comments/    | GET       | collection.find()        | list all comments                                 |
-|   | 4.b nested new    | /movies/:id/comments/new | GET       | N/A                      | display the form for new comment                  |
-|   | 4.c nested create | /movies/:id/comments     | POST      | collection.create()      | insert a new comment                              |
-|   | 4.d nested show   | /movies/:id/comments/:id | GET       | collection.findById()    | show details of selected comment                  |
-| 5 | EDIT              | /movies/:id/edit         | GET       | post.findById()          | Show edit form for one post                       |
-| 6 | UPDATE            | /movies/:id              | PUT       | post.findByIdAndUpdate() | Update particular post, then redirect             |
-| 7 | DESTROY           | /movies/:id              | DELETE    | post.findByIdAndRemove() | Delete a particular post, then redirect somewhere |
-
-* #### Step2
-
-//Create seperate folders as movies and comments, for the related ejs files in views folder
-  Don't forget to update the route for the partials (footer and header), as the working directory will be updated (in app.js and index.ejs )
-
-// Add the logic for the routes 4b and 4c to the app.js file ; as mentioned on table above
-
-- 4.b For get route use populate for the associated schemas :
   ```
-Movie.findById(req.params.id).populate("comments").exec(function(err,whichMovietoComment){
+$ app.use(express.static("public"));
+$ app.use(express.static("./public"));
+$ app.use(express.static(__dirname + "/public"));
   ```
 
-- 4.c For post route, go step by step
- -  create a new comment
- - look up campground using ID
- - connect new comment to movie
- - redirect to showpage
+In case of any issues, [this stackoverflow link](https://stackoverflow.com/questions/48248832/stylesheet-not-loaded-because-of-mime-type) might help
 
-// build newComment.ejs ; for the id: part you'll need another rendering on app.js (similar to edit, on RESTFUL APIs)
 
-// [Express-Sanitizer](https://www.npmjs.com/package/express-sanitizer) is recommended to prevent cross site scripting
+// You can now move the style tag for backgroundpicture inside header.ejs to main.css as well
 
-Sample :
-
- ```
-$ npm i express-sanitizer
-$ const expressSanitizer = require('express-sanitizer');
-$ app.use(expressSanitizer());
-$ req.body.comment.text = req.sanitize(req.body.comment.text);
-```
+// You will also have to add new resource to header.ejs , after bootstrap such as `<link rel="stylesheet" href="/stylesheets/main.css">``
