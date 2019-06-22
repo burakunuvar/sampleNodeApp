@@ -1,0 +1,16 @@
+
+<%- include('partials/header') -%>
+
+<h1> LOGIN PAGE : FOR REGISTERED USERS ONLY </h1>
+
+<form action="/login" method="POST">
+    <input type="username" placeholder="username" name="username">
+    <input type="password" placeholder="password" name="password">
+    <input type="submit" value="Login">
+</form>
+
+<!--<li> <a href="/register"> sign up = register </a></li>-->
+<!--<li> <a href="/login"> Login! </a></li>-->
+<!--<li> <a href="/logout"> Logout! </a></li>-->
+
+<%- include('partials/footer'); -%>
