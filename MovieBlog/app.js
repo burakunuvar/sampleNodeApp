@@ -16,7 +16,7 @@ const commentRoutes = require("./routes/comments");
 const movieRoutes = require("./routes/movies");
 const authRoutes = require("./routes/auths");
 
-seedDB();
+// seedDB();
 mongoose.connect('mongodb://localhost:27017/moviesDB', {useNewUrlParser: true});
 
 const app = express();

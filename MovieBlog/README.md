@@ -1,47 +1,47 @@
-* ###  <u>  **Part6 : Refactoring Routes
+* ###  <u>  **Part8 : User Associations:Comment
 
 * #### Steps
 
-  => make a new directory called "routes" in the same folder as app.js; that will include 3 main route files :
+  => Update the author in comment model to include user data
 
  ```
-  $ mkdir routes
-  $ touch routes/movies.js
-  $ touch routes/comments.js
-  $ touch routes/auths.js
-```
- =>Copy and past the related logic to each of the created files
+ // === FROM THIS : ===
 
- => Require express and use router in each of files , to return a value :
+ var commentSchema = new mongoose.Schema({
+     text: String,
+     author: String
+ });
 
- ```
-  const express = require("express");
-  const router = express.Router();
-  ...
-  module.exports = router
-```
-// replace all `app.` with `router.`
-
- => Require the created routes in app.js and call each :
-
- ```
-  const commentRoutes = require("./routes/comments");
-  const movieRoutes = require("./routes/movies");  
-  const authRoutes = require("./routes/auth");
-  app.use(commentRoutes);
-  app.use(movieRoutes);
-  app.use(authRoutes);
-```
-=> Work on warnings on each of created route files, eliminate them by requiring needed dependencies
-
- => Optional:  Place the routes in app.use functions and remove from created routes ...
+ // === TO THIS : ===
+  var commentSchema = new mongoose.Schema({
+      text: String,
+      author: {
+       id:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      },
+       username: String,
+     }
+  });
 
  ```
-  app.use("/", authRoutes);
-  app.use("/movies", movieRoutes);
-  app.use("/movies/:id/comments", commentRoutes);
-```
- => to be able to use ":id" you should merge params in the file it's included ( comment.js, in this case)
+
+ Note1 : It could be just the id inside the commentSchema, but that would require additional queries to receive username ; for which Mongoose provides an easier alternative.
+
+ Note2 : the author will be single due to one to one relationship ( each comment needs to belong to one user ) , thus it's just one object with two items, rather than an array of items in one to many relationships ()
+
+ => Drop database through mongo shell and remove
+ seedDB for a manual entry
+
+ => use `req.user` in post comment route within app.js to pass data through after login.
+
  ```
- const router = express.Router({mergeParams:true});
+comment.author.id = req.user._id ;
+comment.author.username = req.user.username
+comment.save();
+
  ```
+
+ => Update newComment.ejs not to request username
+
+ => Update showMovie.ejs to show author.username

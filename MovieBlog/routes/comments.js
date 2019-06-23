@@ -34,6 +34,9 @@ router.post("/",isLoggedIn,(req,res)=>{
         if(!err){
           // console.log(movieWithNewComment);
           // console.log(insertedComment);
+          insertedComment.author.id = req.user._id;
+          insertedComment.author.username = req.user.username;
+          insertedComment.save();
           movieWithNewComment.comments.push(insertedComment);
           movieWithNewComment.save();
           // console.log("!!!!! COMMENTS PUSHED !!!!! ");
