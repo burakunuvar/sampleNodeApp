@@ -1,47 +1,53 @@
-* ###  <u>  **Part8 : User Associations:Comment
+* ###  <u>  **Part9: User Associations: Movie
 
-* #### Steps
+* #### Step1 : Only authenticated user can add a new movie
 
-  => Update the author in comment model to include user data
+  => Use isLoggedIn middleware to render newComment and post one.
 
- ```
- // === FROM THIS : ===
+* #### Step2 : Username + id should be associated with the movie
 
- var commentSchema = new mongoose.Schema({
-     text: String,
-     author: String
- });
+  => Update movie.js model to include user data in movieSchema :
 
- // === TO THIS : ===
-  var commentSchema = new mongoose.Schema({
-      text: String,
-      author: {
-       id:  {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
-       username: String,
-     }
-  });
+  ```
+ author: {
+  id:  {
+   type: mongoose.Schema.Types.ObjectId,
+   ref: "User"
+ },
+  username: String,
+ }
 
  ```
 
- Note1 : It could be just the id inside the commentSchema, but that would require additional queries to receive username ; for which Mongoose provides an easier alternative.
+ Note1 : It could be just the id inside the movieSchema, but that would require additional queries to receive username ; for which Mongoose provides an easier alternative.
 
- Note2 : the author will be single due to one to one relationship ( each comment needs to belong to one user ) , thus it's just one object with two items, rather than an array of items in one to many relationships ()
+ Note2 : the author will be single due to one to one relationship ( each movie needs to belong to one user ) , thus it's just one object with two items, rather than an array of items in one to many relationships (such as movies and comments)
 
- => Drop database through mongo shell and remove
- seedDB for a manual entry
 
- => use `req.user` in post comment route within app.js to pass data through after login.
+  => Update posting a new movie route with the new schema :
+  => use `req.user` in post movie route within app.js to pass data through after login.
 
- ```
-comment.author.id = req.user._id ;
-comment.author.username = req.user.username
-comment.save();
+```  
+// add this part as opt1
+var newMovie={
+  title: req.body.title,
+  image: req.body.image,
+  description: req.body.description,
+  author: {
+    id: req.user._id,
+    username: req.user.username,
+  },
+};
+```
 
- ```
+```
+// Or add this part as opt2
 
- => Update newComment.ejs not to request username
+newMovie.author.id = req.user._id;
+newMovie.author.username = req.user.username;
 
- => Update showMovie.ejs to show author.username
+```
+
+ => Drop database through mongo shell and remove seedDB for a manual entry
+
+ => Update showMovie.ejs to show author.username , as submitted by ...
