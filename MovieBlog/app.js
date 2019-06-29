@@ -10,6 +10,7 @@ const seedDB = require("./seeds");
 const expressSanitizer = require('express-sanitizer');
 const session = require('express-session');
 const passport = require("passport");
+const methodOverride = require('method-override');
 // const LocalStrategy  = require("passport-local");
 const passportLocalMongoose = require('passport-local-mongoose');
 const commentRoutes = require("./routes/comments");
@@ -22,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/moviesDB', {useNewUrlParser: true});
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
+app.use(methodOverride('_method'));
 
 app.use(bodyParser.urlencoded({
   extended: true

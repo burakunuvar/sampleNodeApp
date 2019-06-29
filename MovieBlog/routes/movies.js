@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Movie = require("../models/movie");
+const middleware = require("../middleware/middleware");
 
 
 // ======== CAMPGROUND ROUTES ARE STARTING HERE==========
@@ -52,10 +53,10 @@ console.log("**** RESTAPI: 3-POST ; request made to index.ejs ");
   res.redirect("/movies");
 });
 
-//RESTAPI: 4-SHOW ; request made to show.ejs
+//RESTAPI: 4-SHOW ; request made to showMovie.ejs
 // router.get("/movies/:id",function(req,res){
 router.get("/:id",function(req,res){
-  console.log("**** RESTAPI: 4-SHOW ; request made to show.ejs ");
+  console.log("**** RESTAPI: 4-SHOW ; request made to showMovie.ejs ");
   Movie.findById(req.params.id).populate("comments").exec(function(err,shownMovie){
     if(!err){
       res.render("movies/showMovie",{shownMovie:shownMovie});
@@ -65,7 +66,48 @@ router.get("/:id",function(req,res){
     }
   });
 });
-// ======== CAMPGROUND ROUTES ARE  STARTING HERE==========
+
+//RESTAPI: 5-EDIT ; request made to editMovie.ejs
+// router.get("/movies/:id",function(req,res){
+router.get("/:id/edit",checkMovieAuthorization,function(req,res){
+  console.log("**** RESTAPI: 5-EDIT ; request made to editMovie.ejs ");
+  Movie.findById(req.params.id, function(err,editedMovie){
+    if(!err){
+      res.render("movies/editMovie",{editedMovie:editedMovie});
+      console.log(editedMovie);
+    }else{
+      console.log(err);
+    }
+  });
+});
+
+//RESTAPI: 6-POST ; request made to showMovie.ejs
+// router.put("/movies/:id",function(req,res){
+router.put("/:id",checkMovieAuthorization,function(req,res){
+  console.log("**** RESTAPI: 6-PUT ; request made to showMovie.ejs ");
+  Movie.findByIdAndUpdate(req.params.id,req.body.editedMovie,function(err,updatedMovie){
+    if(!err){
+      console.log(updatedMovie);
+      res.redirect("/movies/" + req.params.id );
+    }else {
+      res.redirect("/movies");
+    }
+  });
+});
+
+//RESTAPI: 7-DELETE ; request made to showMovie.ejs
+router.delete("/:id",checkMovieAuthorization,function(req,res){
+  console.log("**** RESTAPI: 7-DELETE ; request made to showMovie.ejs ");
+  Movie.findByIdAndRemove(req.params.id,function(err,deletedMovie){
+    if(!err){
+      res.redirect("/movies");
+    }else{
+      console.log(err);
+    }
+  });
+});
+
+// ======== CAMPGROUND ROUTES ARE ENDING HERE==========
 
 //middleware function for authentication check
 
@@ -78,5 +120,31 @@ function isLoggedIn(req, res, next){
     res.redirect("/login");
   }
 }
+
+
+function checkMovieAuthorization(req, res, next){
+    if(req.isAuthenticated()){
+        console.log("*****AUTHENTICATED*****");
+        Movie.findById(req.params.id, function (err, foundMovie){
+            if(err) {
+                console.log("MOVIE NOT FOUND");
+                res.redirect("back");
+            }else {
+                console.log("MOVIE FOUND");
+                if(foundMovie.author.id.equals(req.user._id)){
+                    console.log("*****AUTHORIZED*****");
+                    next();
+                }else{
+                    console.log("-----NOT AUTHORIZED-----");
+                    res.redirect("back");
+                }
+            }
+        });
+    }else{
+      console.log("----- NOT AUTHENTICATED----");
+      res.redirect("back");
+    }
+}
+
 
 module.exports = router ;

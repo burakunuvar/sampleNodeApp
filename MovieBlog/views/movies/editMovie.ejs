@@ -1,0 +1,33 @@
+<%- include('../partials/header') -%>
+
+
+<div class="container">
+  <div class="jumbotron jumbotron-fluid text-white-50 " id="backgroundpicture">
+    <div class="container p-5">
+      <h3 class="display-4">Edit Your Movie </h3>
+      <form action="/movies/<%=editedMovie._id%>?_method=PUT" method="POST">
+        <div class="form-group">
+          <input type="text" class="form-control-sm" name="editedMovie[title]" value="<%=editedMovie.title%>">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control-sm" name="editedMovie[image]" value="<%=editedMovie.image%>">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control-md" name="editedMovie[description]" value="<%=editedMovie.description%>">
+        </div>
+        <button type="submit" class="btn btn-dark btn-sm ">Edit the Movie</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-end">
+  <div class="col 4 p-5">
+    <a class="btn btn-dark btn-sm " href="/movies" role="button"> back to movies </a>
+  </div>
+
+</div>
+
+
+
+<%- include('../partials/footer'); -%>

@@ -18,16 +18,21 @@
                      <h4 class="card-title"><a href="#"><%= shownMovie.title %></a></h4>
                      <p class="card-text"> <%=shownMovie.description  %></p>
                      <p class="card-text float-right"> <em>submitted by <%= shownMovie.author.username %> </em>  </p>
+                     <%  if(currentUser && shownMovie.author.id.equals(currentUser._id)) { %>
+                       <form class="form-inline mb-2 " action="/movies/<%=shownMovie._id%>?_method=DELETE" method="POST">
+                          <a class="btn btn-outline-warning btn-sm d-inline ml-1" href="/movies/<%=shownMovie._id %>/edit" role="button"> edit </a>
+                          <button type="submit" class="btn btn-outline-danger btn-sm ml-1">delete</button>
+                        </form>
+                     <% } %>
                      <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
                 </div>
             </div>
             <div class="card mt-3 bg-light" >
                  <div class="card-body">
                      <h4 class="card-title text-right mb-5">
-                       <a class="btn btn-success btn-sm" href="/movies/<%=shownMovie._id %>/comments/new" role="button">
+                       <a class="btn btn-outline-success btn-sm" href="/movies/<%=shownMovie._id %>/comments/new" role="button">
                           leave a comment
                         </a>
-                        <a class="btn btn-dark btn-sm m-1" href="/movies" role="button"> back to movies </a>
                      </h4>
                      <hr>
                      <% shownMovie.comments.forEach(function(comment){ %>
@@ -38,11 +43,18 @@
                                 <p class="card-text m-1">
                                     <%= comment["text"] %>
                                 </p>
+                                 <%  if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+                                <form class="form-inline mb-2" action="/movies/<%=shownMovie._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                                   <a class="btn btn-outline-warning btn-sm d-inline ml-1" href="/movies/<%=shownMovie._id %>/comments/<%=comment._id %>/edit" role="button">edit comment </a>
+                                   <button type="submit" class="btn btn-outline-danger btn-sm ml-1">delete comment</button>
+                                </form>
+                                 <% } %>
                             </div>
                         </div>
                      <% }); %>
                 </div>
             </div>
+            <a class="btn btn-dark btn-sm m-1 float-right" href="/movies" role="button"> back to movies </a>
     </div>
 </div>
 

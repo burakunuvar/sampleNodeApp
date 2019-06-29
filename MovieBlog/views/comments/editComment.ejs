@@ -1,0 +1,28 @@
+<%- include('../partials/header') -%>
+
+<div class="container">
+  <div class="jumbotron jumbotron-fluid text-white-50 " id="backgroundpicture">
+    <div class="container p-5">
+      <h3 class="display-4">Edit Comment <br> <em> "<%= editedComment._id %>" </em> </h3>
+      <form action="/movies/<%=shownMovieId %>/comments/<%=editedComment._id %>?_method=PUT" method="POST">
+        <div class="form-group">
+          <input type="text" class="form-control-sm" name="editedComment[text]" value="<%= editedComment.text %>">
+        </div>
+        <!-- <div class="form-group">
+          <input type="text" class="form-control-sm" name="comment[author]" placeholder="author of the comment">
+        </div> -->
+        <button type="submit" class="btn btn-secondary btn-sm ">Edit </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-end">
+  <div class="col 4 p-5">
+    <a class="btn btn-dark btn-sm " href="/movies" role="button"> back to movies </a>
+  </div>
+
+</div>
+
+
+<%- include('../partials/footer'); -%>

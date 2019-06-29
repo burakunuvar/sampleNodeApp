@@ -1,5 +1,5 @@
 body {
-    background-color: #d3d3d3;
+    background-color: #438D80;
 }
 
 #backgroundpicture {
@@ -8,4 +8,8 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
+}
+
+#delete-form {
+  display: inline;
 }
